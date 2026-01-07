@@ -1,0 +1,47 @@
+from dataclasses import dataclass
+from typing import List, Optional
+
+
+@dataclass
+class TextBlock:
+    """
+    Базовая единица текста на слайде.
+
+    Это НЕ абзац и НЕ shape — это уже нормализованный блок,
+    с которым дальше работает логика порядка и группировки.
+    """
+    slide_index: int
+
+    text: str
+
+    # Геометрия (EMU → уже приведены к числам)
+    x: float
+    y: float
+    width: float
+    height: float
+
+    # Z-order (важно при наложениях)
+    z: int
+
+    # Эвристические признаки
+    is_title: bool = False
+    level: Optional[int] = None  # уровень заголовка (h1, h2…)
+    column: Optional[int] = None  # номер колонки
+
+
+@dataclass
+class SlideContent:
+    """
+    Содержимое одного слайда после парсинга.
+    """
+    slide_index: int
+    title: Optional[str]
+    blocks: List[TextBlock]
+
+
+@dataclass
+class Document:
+    """
+    Финальная модель документа
+    """
+    slides: List[SlideContent]
